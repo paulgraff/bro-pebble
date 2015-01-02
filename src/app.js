@@ -7,6 +7,20 @@
 var UI = require('ui');
 var Vector2 = require('vector2');
 
+Pebble.addEventListener('ready', function(e) {
+    // ready logic
+    console.log('Pebble is ready!');
+});
+
+Pebble.addEventListener('showConfiguration', function(e) {
+    // Show config page
+    Pebble.openURL('https://wootbro.com');
+});
+
+Pebble.addEventListener('webviewclosed', function(e) {
+    console.log('Configuration window returned: ' + e.response);
+});
+
 var main = new UI.Card({
   title: 'Pebble.js',
   icon: 'images/menu_icon.png',

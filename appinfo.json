@@ -33,6 +33,7 @@
     },
     "shortName": "Bro",
     "uuid": "1d1a9d01-ff2c-4f1a-b792-206dbe237666",
+    "capabilities": [ "configurable" ],
     "versionCode": 1,
     "versionLabel": "1.0",
     "watchapp": {
