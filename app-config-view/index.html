@@ -36,7 +36,8 @@
 $(function() {
     $('#bro-settings').on('submit', function(e){
     	var username = $('#username').val();
-    	var bros = $('#bros').val();
+    	var bros = $('#bros').val();    	
+    	bros = $.map(bros.split(","), $.trim);
     	var options = { username: username, bros: bros };
     	location.href = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(options));
     	e.preventDefault();
