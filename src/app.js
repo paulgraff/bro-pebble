@@ -89,7 +89,7 @@ menu.on('select', function(e) {
         }
       },
       "data": {
-        "alert": textfield.text() + " - " + targetUsername
+        "alert": textfield.text() + " - " + Settings.option('username')
       }
     };
 
