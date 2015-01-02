@@ -44,6 +44,7 @@ var menu = new UI.Menu({
             }
             return result;
         })()
+    }]
 });
 
 menu.show();
@@ -72,12 +73,4 @@ menu.on('select', function(e) {
       textfield.text(newText);
     }
   });
-});
-
-main.on('click', 'down', function(e) {
-  var card = new UI.Card();
-  card.title('A Card');
-  card.subtitle('Is a Window');
-  card.body('The simplest window type in Pebble.js.');
-  card.show();
 });
