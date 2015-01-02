@@ -7,66 +7,48 @@
 var UI = require('ui');
 var Vector2 = require('vector2');
 var Vibe = require('ui/vibe');
+var Settings = require('settings');
 
 Pebble.addEventListener('ready', function(e) {
     // ready logic
     console.log('Pebble is ready!');
 });
 
-Pebble.addEventListener('showConfiguration', function(e) {
-    // Show config page
-    Pebble.openURL('http://webjam.org/pebble-bro-settings/settings.html');
-});
+Settings.config(
+{ url: 'http://webjam.org/pebble-bro-settings/settings.html', autoSave: true },
+    function (e) {
+        console.log('opening configurable');
 
-Pebble.addEventListener('webviewclosed', function(e) {
-    console.log('Configuration window returned: ' + e.response);
-});
-
-function loadConfiguration() {
-    var username = localStorage.getItem('username');
-    if (typeof username === 'undefined') {
-        username = 'alexpgates';
+        // defaults
+        Settings.option({
+            'username': 'alexpgates',
+            'bros': ['paulgraff','jmhobbs','megancasey']
+        });
+    },
+    function (e) {
+        console.log('closed configurable');
     }
+);
 
-    var friends = localStorage.getItem('friends');
-    if (typeof friends === 'undefined') {
-        friends = ['jmhobbs', 'megan'];
-    }
 
-    return {
-        username: username,
-        friends: friends
-    }
-}
-
-var main = new UI.Card({
-  title: 'Bro',
-  // icon: 'images/menu_icon.png',
-});
-
-main.show();
-
-main.on('click', 'up', function(e) {
-  var menu = new UI.Menu({
+var menu = new UI.Menu({
     sections: [{
-      items: [{
-        title: 'Pebble.js',
-        icon: 'images/menu_icon.png',
-        subtitle: 'Can do Menus'
-      }, {
-        title: 'Second Item',
-        subtitle: 'Subtitle Text'
-      }]
-    }]
-  });
-  menu.on('select', function(e) {
-    console.log('Selected item #' + e.itemIndex + ' of section #' + e.sectionIndex);
-    console.log('The item is titled "' + e.item.title + '"');
-  });
-  menu.show();
+        items: (function () {
+            var bros = Settings.option('bros');
+            var result = [];
+
+            for (var i = 0; i < bros.length; i++) {
+                result.push({
+                    title: bros[i]
+                });
+            }
+            return result;
+        })()
 });
 
-main.on('click', 'select', function(e) {
+menu.show();
+
+menu.on('select', function(e) {
   var browindow = new UI.Window();
   var textfield = new UI.Text({
     position: new Vector2(0, 50),
@@ -77,7 +59,7 @@ main.on('click', 'select', function(e) {
   });
   browindow.add(textfield);
   browindow.show();
-  
+
   browindow.on('click', 'up', function(e) {
     var currentText = textfield.text();
     textfield.text(currentText + 'o');
