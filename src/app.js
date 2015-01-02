@@ -6,6 +6,7 @@
 
 var UI = require('ui');
 var Vector2 = require('vector2');
+var Vibe = require('ui/vibe');
 
 Pebble.addEventListener('ready', function(e) {
     // ready logic
@@ -66,16 +67,29 @@ main.on('click', 'up', function(e) {
 });
 
 main.on('click', 'select', function(e) {
-  var wind = new UI.Window();
+  var browindow = new UI.Window();
   var textfield = new UI.Text({
     position: new Vector2(0, 50),
     size: new Vector2(144, 30),
     font: 'gothic-24-bold',
-    text: 'Text Anywhere!',
+    text: 'Bro',
     textAlign: 'center'
   });
-  wind.add(textfield);
-  wind.show();
+  browindow.add(textfield);
+  browindow.show();
+  
+  browindow.on('click', 'up', function(e) {
+    var currentText = textfield.text();
+    textfield.text(currentText + 'o');
+  });
+
+  browindow.on('click', 'down', function(e) {
+    var currentText = textfield.text();
+    if(currentText != 'Bro'){
+      var newText = currentText.substring(0, currentText.length - 1);
+      textfield.text(newText);
+    }
+  });
 });
 
 main.on('click', 'down', function(e) {
