@@ -14,18 +14,33 @@ Pebble.addEventListener('ready', function(e) {
 
 Pebble.addEventListener('showConfiguration', function(e) {
     // Show config page
-    Pebble.openURL('https://wootbro.com');
+    Pebble.openURL('http://webjam.org/pebble-bro-settings/settings.html');
 });
 
 Pebble.addEventListener('webviewclosed', function(e) {
     console.log('Configuration window returned: ' + e.response);
 });
 
+function loadConfiguration() {
+    var username = localStorage.getItem('username');
+    if (typeof username === 'undefined') {
+        username = 'alexpgates';
+    }
+
+    var friends = localStorage.getItem('friends');
+    if (typeof friends === 'undefined') {
+        friends = ['jmhobbs', 'megan'];
+    }
+
+    return {
+        username: username,
+        friends: friends
+    }
+}
+
 var main = new UI.Card({
-  title: 'Pebble.js',
-  icon: 'images/menu_icon.png',
-  subtitle: 'Hello World!',
-  body: 'Press any button.'
+  title: 'Bro',
+  // icon: 'images/menu_icon.png',
 });
 
 main.show();
