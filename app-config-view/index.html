@@ -35,8 +35,10 @@
 <script type="text/javascript">
 $(function() {
     $('#bro-settings').on('submit', function(e){
-    	var configuration = $(this).serialize();
-    	location.href = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(configuration));
+    	var username = $('#username').val();
+    	var bros = $('#bros').val();
+    	var options = { username: username, bros: bros };
+    	location.href = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(options));
     	e.preventDefault();
     });
 });
