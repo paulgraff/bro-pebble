@@ -9,6 +9,7 @@ var Vector2 = require('vector2');
 var Settings = require('settings');
 var ajax = require('ajax');
 var config = require('./config');
+var Accel = require('ui/accel');
 
 Pebble.addEventListener('ready', function(e) {
   // ready logic
@@ -51,6 +52,8 @@ var menu = new UI.Menu({
 menu.show();
 
 menu.on('select', function(e) {
+  Accel.init();
+
   var targetUsername = Settings.option('bros')[e.itemIndex];
   console.log(targetUsername);
 
@@ -64,6 +67,12 @@ menu.on('select', function(e) {
   });
   browindow.add(textfield);
   browindow.show();
+
+  Accel.on('tap', function(e) {
+    var currentText = textfield.text();
+    textfield.text(currentText + 'o');
+    console.log('tap');
+  });
 
   browindow.on('click', 'up', function(e) {
     var currentText = textfield.text();
