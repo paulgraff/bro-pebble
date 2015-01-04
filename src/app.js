@@ -1,37 +1,27 @@
 /**
-* Welcome to Pebble.js!
-*
-* This is where you write your app.
+* Bro-Pebble
+* Alex P. Gates & Paul Graff
 */
 
-var UI = require('ui');
-var Vector2 = require('vector2');
-var Settings = require('settings');
-var ajax = require('ajax');
-var config = require('./config');
 var Accel = require('ui/accel');
+var ajax = require('ajax');
+var Settings = require('settings');
+var Vector2 = require('vector2');
+var UI = require('ui');
 
-Pebble.addEventListener('ready', function(e) {
-  // ready logic
-  console.log('Pebble is ready!');
-});
+var config = require('./config');
 
 Settings.config(
-{ url: 'http://webjam.org/pebble-bro-settings/settings.html', autoSave: true },
-function (e) {
-  console.log('opening configurable');
-
-  // defaults
-  Settings.option({
-    'username': 'alexpgates',
-    'bros': ['wootbro','jmhobbs','megancasey']
-  });
-},
-function (e) {
-  console.log('closed configurable');
-}
+  { url: 'http://webjam.org/pebble-bro-settings/settings.html' },
+  function (e) {
+    // Set defaults
+    Settings.option({
+      'username': 'alexpgates',
+      'bros': ['wootbro','jmhobbs','megancasey']
+    });
+  },
+  function (e) {}
 );
-
 
 var menu = new UI.Menu({
   sections: [{
@@ -49,13 +39,10 @@ var menu = new UI.Menu({
   }]
 });
 
-menu.show();
-
 menu.on('select', function(e) {
   Accel.init();
 
   var targetUsername = Settings.option('bros')[e.itemIndex];
-  console.log(targetUsername);
 
   var browindow = new UI.Window();
   var textfield = new UI.Text({
@@ -81,7 +68,7 @@ menu.on('select', function(e) {
 
   browindow.on('click', 'down', function(e) {
     var currentText = textfield.text();
-    if(currentText != 'Bro'){
+    if ( currentText != 'Bro' ) {
       var newText = currentText.substring(0, currentText.length - 1);
       textfield.text(newText);
     }
@@ -112,22 +99,42 @@ menu.on('select', function(e) {
     var splashCard = new UI.Card({
       title: "Sending Bro!"
     });
+
     splashCard.show();
 
     ajax({url: 'https://api.parse.com/1/push', method: 'POST', type: 'json', data: data, headers: headers},
-    function (json) {
+      function (result) {
+        var resultsCard = new UI.Card({
+          title: 'Success!'
+        });
 
-      var resultsCard = new UI.Card({
-        title: 'Success!'
-      });
+        browindow.hide();
+        splashCard.hide();
+        resultsCard.show();
 
-      splashCard.hide();
-      resultsCard.show();
-    },
-    function (error) {
-      console.log('Something broke');
-    }
-  );
-
+        setTimeout(function () {
+          resultsCard.hide();
+        }, 500);
+      },
+      function (error) {
+        splashCard.hide();
+        displayErrorCard('Failed to send Bro. Please try again!');
+      }
+    );
+  });
 });
+
+menu.show();
+
+function displayErrorCard(message) {
+    var errorCard = new UI.Card({
+      title: 'Error',
+      subtitle: message
+    });
+
+    errorCard.show();
+}
+
+Pebble.addEventListener('ready', function(e) {
+  // ready logic
 });
